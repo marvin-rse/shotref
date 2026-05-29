@@ -162,6 +162,47 @@
   .theme-black .install-hint { background: rgba(120,170,255,0.08); color: #cde; border-left: 3px solid #5a8ad4; }
   .theme-white .install-hint { background: #eef4ff; color: #1a3a6a; border-left: 3px solid #5a8ad4; }
   .theme-red .install-hint { background: rgba(213,69,69,0.06); color: #d54545; border-left: 3px solid #d54545; }
+
+  /* Version & changelog */
+  .version-card { border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .theme-black .version-card { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1); }
+  .theme-white .version-card { background: #fff; border: 0.5px solid rgba(0,0,0,0.08); }
+  .theme-red .version-card { background: rgba(213,69,69,0.06); border: 0.5px solid rgba(213,69,69,0.25); }
+  .version-card .v-num { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .theme-black .version-card .v-num { color: #fff; }
+  .theme-white .version-card .v-num { color: #1a1a1a; }
+  .theme-red .version-card .v-num { color: #ff5555; }
+  .version-card .v-date { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+  .version-card .v-pill { margin-left: auto; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+  .theme-black .version-card .v-pill { background: rgba(120,200,120,0.15); color: #8ad494; }
+  .theme-white .version-card .v-pill { background: #e0f4e0; color: #1a6a1a; }
+  .theme-red .version-card .v-pill { background: rgba(213,69,69,0.15); color: #ff5555; }
+
+  .changelog { display: flex; flex-direction: column; gap: 14px; }
+  .changelog-entry { padding: 14px 16px; border-radius: 14px; }
+  .theme-black .changelog-entry { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.08); }
+  .theme-white .changelog-entry { background: #fff; border: 0.5px solid rgba(0,0,0,0.06); }
+  .theme-red .changelog-entry { background: rgba(213,69,69,0.04); border: 0.5px solid rgba(213,69,69,0.2); }
+  .changelog-entry .ce-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .changelog-entry .ce-v { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; font-weight: 600; }
+  .theme-black .changelog-entry .ce-v { color: #fff; }
+  .theme-white .changelog-entry .ce-v { color: #1a1a1a; }
+  .theme-red .changelog-entry .ce-v { color: #ff5555; }
+  .changelog-entry .ce-date { font-size: 12px; opacity: 0.6; }
+  .changelog-entry ul { margin: 0; padding: 0 0 0 18px; font-size: 14px; line-height: 1.55; }
+  .changelog-entry li { margin-bottom: 4px; }
+  .changelog-entry li:last-child { margin-bottom: 0; }
+  .changelog-entry .ce-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; margin-right: 4px; vertical-align: 1px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .ce-tag.new { background: rgba(120,200,120,0.18); color: #8ad494; }
+  .ce-tag.fix { background: rgba(255,184,77,0.18); color: #ffb84d; }
+  .ce-tag.imp { background: rgba(120,170,255,0.18); color: #8ab4f0; }
+  .theme-white .ce-tag.new { background: #e0f4e0; color: #2a7a2a; }
+  .theme-white .ce-tag.fix { background: #fff0d0; color: #8a5a00; }
+  .theme-white .ce-tag.imp { background: #e0eaf8; color: #2a5a8a; }
+  .theme-red .ce-tag.new, .theme-red .ce-tag.fix, .theme-red .ce-tag.imp { background: rgba(213,69,69,0.15); color: #ff5555; }
+
+  .changelog-toggle { width: 100%; justify-content: center; margin-top: 4px; }
+  .changelog-collapsed .changelog-entry:nth-child(n+3) { display: none; }
 </style>
 </head>
 <body>
@@ -226,6 +267,12 @@
       <div class="install-hint">
         Open this page in <strong>Safari</strong>, tap the <strong>Share</strong> button, then <strong>Add to Home Screen</strong>. The app launches full-screen and works offline.
       </div>
+
+      <div class="section-label" style="margin-top: 2rem;">Version</div>
+      <div id="versionCard" class="version-card"></div>
+      <div id="changelog" class="changelog changelog-collapsed"></div>
+      <button id="changelogToggle" class="nav-btn changelog-toggle">Show full changelog</button>
+
       <div class="section-label" style="margin-top: 2rem;">About</div>
       <div class="tip-box" style="font-size: 13px; line-height: 1.6;">
         A free, offline shooting reference for the Sony α7C II. Astro and Long exposure auto-switch to the red theme to protect your night vision.
@@ -283,6 +330,28 @@
     { id: 'black', name: 'Black', desc: 'OLED-friendly dark mode', sw: 'background: #0a0a0a; border: 1px solid #333;' },
     { id: 'white', name: 'White', desc: 'Bright, daylight reading', sw: 'background: #fafaf8; border: 1px solid #ccc;' },
     { id: 'red',   name: 'Red',   desc: 'Astro · night vision', sw: 'background: #0a0000; border: 1px solid #d54545;' }
+  ];
+
+  // ============ VERSION & CHANGELOG ============
+  // Bump VERSION and add a new entry to CHANGELOG for each release.
+  // Types: 'new' (feature), 'imp' (improvement), 'fix' (bug fix)
+  const VERSION = '1.0.0';
+  const VERSION_DATE = '2026-05-29';
+  const CHANGELOG = [
+    {
+      v: '1.0.0', date: '2026-05-29',
+      changes: [
+        { t: 'new', m: 'Initial release for Sony α7C II' },
+        { t: 'new', m: '8 genres: Portrait, Street, Landscape, Family & kids, Astro, Long exposure, Wildlife & sport, Macro' },
+        { t: 'new', m: 'Step-by-step menu paths, settings table and field tip per genre' },
+        { t: 'new', m: 'Upload your own reference photos per genre, stored locally on device' },
+        { t: 'new', m: 'Full-screen photo viewer with EXIF readout (aperture, shutter, ISO, focal length, body, lens, date)' },
+        { t: 'new', m: 'Three themes: Black, White, Red. Astro and Long exposure auto-switch to red for night vision' },
+        { t: 'new', m: 'Hardened with Content Security Policy, no-index, no-referrer headers' }
+      ]
+    }
+    // Add new versions on top, e.g.:
+    // { v: '1.1.0', date: '2026-06-15', changes: [{ t: 'new', m: 'Video / vlogging genre' }] }
   ];
 
   // ============ EXIF READER ============
@@ -461,6 +530,7 @@
     detailView.style.display = 'none';
     settingsView.style.display = 'block';
     renderThemePicker();
+    renderVersion();
     window.scrollTo(0, 0);
   }
 
@@ -554,6 +624,48 @@
       clearAllPhotos();
       renderGenreTiles();
     }
+  });
+
+  // ============ VERSION RENDER ============
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function renderVersion() {
+    const lastSeen = localStorage.getItem('shotref_last_seen_version');
+    const isCurrent = lastSeen === VERSION;
+    document.getElementById('versionCard').innerHTML = `
+      <div>
+        <div class="v-num">v${escapeHtml(VERSION)}</div>
+        <div class="v-date">Released ${escapeHtml(VERSION_DATE)}</div>
+      </div>
+      <div class="v-pill">${isCurrent ? 'CURRENT' : 'INSTALLED'}</div>
+    `;
+
+    const tagLabel = { new: 'New', imp: 'Improved', fix: 'Fix' };
+    document.getElementById('changelog').innerHTML = CHANGELOG.map(entry => `
+      <div class="changelog-entry">
+        <div class="ce-head">
+          <span class="ce-v">v${escapeHtml(entry.v)}</span>
+          <span class="ce-date">${escapeHtml(entry.date)}</span>
+        </div>
+        <ul>
+          ${entry.changes.map(c => `<li><span class="ce-tag ${c.t}">${tagLabel[c.t] || c.t}</span>${escapeHtml(c.m)}</li>`).join('')}
+        </ul>
+      </div>
+    `).join('');
+
+    // Hide toggle button if there are 2 or fewer entries
+    const toggleBtn = document.getElementById('changelogToggle');
+    toggleBtn.style.display = CHANGELOG.length > 2 ? '' : 'none';
+
+    // Mark this version as seen
+    try { localStorage.setItem('shotref_last_seen_version', VERSION); } catch(e) {}
+  }
+  document.getElementById('changelogToggle').addEventListener('click', () => {
+    const cl = document.getElementById('changelog');
+    const btn = document.getElementById('changelogToggle');
+    cl.classList.toggle('changelog-collapsed');
+    btn.textContent = cl.classList.contains('changelog-collapsed') ? 'Show full changelog' : 'Show less';
   });
 
   applyTheme(userChosenTheme);
