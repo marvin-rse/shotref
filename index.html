@@ -3,11 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+
+<!-- Privacy: keep this page out of search engines and archives -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+
+<!-- Don't leak this URL when the user taps an outgoing link -->
+<meta name="referrer" content="no-referrer">
+
+<!-- Content Security Policy: lock down what this page is allowed to do.
+     Only own scripts/styles, no external loads, blob/data only for the photo previews. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none';">
+
+<!-- PWA / iOS app shell -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Shot Ref">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="format-detection" content="telephone=no">
 <title>α7C II Shot Reference</title>
 
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGEwYTBhIi8+PHJlY3QgeD0iMjIiIHk9IjU4IiB3aWR0aD0iMTM2IiBoZWlnaHQ9Ijc2IiByeD0iMTAiIGZpbGw9IiMxYzFjMWMiLz48cmVjdCB4PSIyMiIgeT0iNTgiIHdpZHRoPSIxMzYiIGhlaWdodD0iNzYiIHJ4PSIxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmEyYTJhIiBzdHJva2Utd2lkdGg9IjEiLz48cmVjdCB4PSIyMiIgeT0iNTgiIHdpZHRoPSIxMzYiIGhlaWdodD0iNiIgcng9IjMiIGZpbGw9IiMxYTFhMWEiLz48cmVjdCB4PSIxMjQiIHk9IjUwIiB3aWR0aD0iMzQiIGhlaWdodD0iMTIiIHJ4PSIzIiBmaWxsPSIjMWMxYzFjIi8+PGNpcmNsZSBjeD0iMTQyIiBjeT0iNTYiIHI9IjIiIGZpbGw9IiMzYTNhM2EiLz48cmVjdCB4PSIxMjAiIHk9IjEzNCIgd2lkdGg9IjM4IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iIzFjMWMxYyIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTYiIHI9IjM0IiBmaWxsPSIjMGEwYTBhIi8+PGNpcmNsZSBjeD0iOTAiIGN5PSI5NiIgcj0iMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJhMmEyYSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48Y2lyY2xlIGN4PSI5MCIgY3k9Ijk2IiByPSIyNiIgZmlsbD0iIzA1MDUwNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iOTYiIHI9IjI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMC41Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSI5NiIgcj0iMTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJhMmEyYSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48Y2lyY2xlIGN4PSI5MCIgY3k9Ijk2IiByPSI2IiBmaWxsPSIjZmZiODRkIi8+PGNpcmNsZSBjeD0iODYiIGN5PSI5MyIgcj0iMiIgZmlsbD0iI2ZmZDk3YSIgb3BhY2l0eT0iMC44Ii8+PHJlY3QgeD0iMzYiIHk9IjcyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMSIgZmlsbD0iI2M0NGE0YSIvPjx0ZXh0IHg9IjQ4IiB5PSI3OCIgZm9udC1mYW1pbHk9Ii1hcHBsZS1zeXN0ZW0sSGVsdmV0aWNhLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNyIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2U4ZThlOCIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+zrE8L3RleHQ+PHRleHQgeD0iNTYiIHk9Ijc4IiBmb250LWZhbWlseT0iLWFwcGxlLXN5c3RlbSxIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNTAwIiBmaWxsPSIjODg4IiBsZXR0ZXItc3BhY2luZz0iMC4zIj43QyBJSTwvdGV4dD48cmVjdCB4PSIxMzIiIHk9Ijc2IiB3aWR0aD0iMTQiIGhlaWdodD0iOCIgcng9IjEiIGZpbGw9IiMxYTFhMWEiIHN0cm9rZT0iIzJhMmEyYSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48dGV4dCB4PSIxMzkiIHk9IjgyIiBmb250LWZhbWlseT0iLWFwcGxlLXN5c3RlbSxIZWx2ZXRpY2Esc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NPC90ZXh0Pjwvc3ZnPg==">

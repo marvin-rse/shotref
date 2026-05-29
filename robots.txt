@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+# This app is for personal use. Please don't index it.
