@@ -1,5 +1,5 @@
 # α7C II Shot Reference
--test-
+
 A free, offline shooting-settings reference for the Sony α7C II. Installable as a home-screen app on iPhone and iPad. Works fully offline once installed. No tracking, no analytics, no cost.
 
 **[→ Open the app](https://marvin-rse.github.io/shotref/)**
