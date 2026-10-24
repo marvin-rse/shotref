@@ -28,6 +28,10 @@ Pick a genre and get the recommended camera settings, the exact menu path to fin
 - **ND filter calculator** — your new shutter speed with ND filters and an optional polariser
 - **Depth of field** — sharp zone and hyperfocal distance
 
+### Send to camera (optional)
+
+Run the small [shotref bridge](bridge/README.md) on a laptop or Raspberry Pi and open shotref through it: each genre gets a **Send to camera** button that applies an exact preset over Wi-Fi or USB via Sony's Camera Remote SDK. The public site never makes network requests.
+
 You can also upload your own reference photos per genre (stored locally on your device, never uploaded anywhere). Tap a photo to see it full-screen with its EXIF metadata.
 
 ## Install on iPhone or iPad
