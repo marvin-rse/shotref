@@ -13,8 +13,10 @@
 <meta name="referrer" content="no-referrer">
 
 <!-- Content Security Policy: lock down what this page is allowed to do.
-     Only own scripts/styles, no external loads, blob/data only for the photo previews. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none';">
+     Only own scripts/styles, no external loads, blob/data only for the photo previews.
+     connect-src 'self' is only used when the page is served by the local shotref bridge
+     (see bridge/); the public version never makes a network request. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; form-action 'none'; base-uri 'none';">
 
 <!-- PWA / iOS app shell -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -354,6 +356,7 @@
       <div id="settingsBox" class="card-box" style="margin-bottom: 2rem;"></div>
       <div class="section-label">Field tip</div>
       <div id="tipBox" class="tip-box" style="margin-bottom: 1rem;"></div>
+      <div id="bridgeCard"></div>
       <div id="relatedTools" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem;"></div>
       <button id="backBtnBottom" class="nav-btn" style="width: 100%; justify-content: center;">← Back to genres</button>
     </div>
@@ -432,6 +435,30 @@
     macro: { sub: 'Close-up detail', menu: ['Top dial to <strong>M</strong>','Side switch on lens to <strong>MF</strong>','Press <strong>C-button</strong> (or assign it) → <strong>Focus Magnifier</strong>','MENU → Shooting → <strong>Bracket Settings</strong> → <strong>Focus bracket</strong> (optional)','Press <strong>Drive Mode</strong> → <strong>Self-timer 2s</strong> if on a tripod'], settings: [['Mode', 'M (Manual)'], ['Aperture', 'f/8 – f/16'], ['Shutter', '1/160 s handheld'], ['ISO', '200 – 800'], ['Focus', 'MF + magnifier'], ['Drive', 'Self-timer 2s'], ['Metering', 'Spot'], ['SteadyShot', 'On handheld'], ['Focus bracket', '5 – 10 frames']], tip: 'Depth of field is paper-thin up close. Move the camera body, not the focus ring, in 1 mm steps. A small LED light buys you sharper shots and lower ISO.' }
   };
 
+  // ============ EXACT PRESETS ============
+  // One concrete value per setting, so a camera can apply it.
+  // fnumber 'widest' = the lens' widest aperture. shutter null = camera decides (A mode).
+  // mode is set by the physical mode dial on the α7C II, so the bridge reports it as a manual step.
+  const PRESETS = {
+    portrait:  { mode: 'A', fnumber: 2,        shutter: null,    iso: 'auto', wb: 'auto',     focus: 'AF-C', drive: 'single' },
+    street:    { mode: 'M', fnumber: 8,        shutter: '1/500', iso: 'auto', wb: 'auto',     focus: 'AF-C', drive: 'single' },
+    landscape: { mode: 'A', fnumber: 8,        shutter: null,    iso: 100,    wb: 'daylight', focus: 'AF-S', drive: 'timer_2s' },
+    family:    { mode: 'A', fnumber: 2.8,      shutter: null,    iso: 'auto', wb: 'auto',     focus: 'AF-C', drive: 'cont_lo' },
+    astro:     { mode: 'M', fnumber: 'widest', shutter: '15"',   iso: 3200,   wb: 4000,       focus: 'MF',   drive: 'timer_2s' },
+    longexp:   { mode: 'M', fnumber: 8,        shutter: '30"',   iso: 100,    wb: 'daylight', focus: 'MF',   drive: 'timer_2s' },
+    wildsport: { mode: 'M', fnumber: 'widest', shutter: '1/2000', iso: 'auto', wb: 'auto',    focus: 'AF-C', drive: 'cont_hi_plus' },
+    macro:     { mode: 'M', fnumber: 11,       shutter: '1/160', iso: 400,    wb: 'auto',     focus: 'MF',   drive: 'single' }
+  };
+  const PRESET_LABELS = {
+    mode: ['Mode', v => v === 'M' ? 'M (Manual)' : 'A (Aperture)'],
+    fnumber: ['Aperture', v => v === 'widest' ? 'Widest' : 'f/' + v],
+    shutter: ['Shutter', v => v === null ? 'Camera decides' : v.replace('"', ' s') + (v.includes('/') ? ' s' : '')],
+    iso: ['ISO', v => v === 'auto' ? 'Auto' : String(v)],
+    wb: ['White balance', v => typeof v === 'number' ? v + ' K' : v[0].toUpperCase() + v.slice(1)],
+    focus: ['Focus', v => v],
+    drive: ['Drive', v => ({ single: 'Single', cont_lo: 'Continuous Lo', cont_hi_plus: 'Continuous Hi+', timer_2s: 'Self-timer 2 s' })[v] || v]
+  };
+
   const genres = [['portrait', 'Portrait'],['street', 'Street'],['landscape', 'Landscape'],['family', 'Family & kids'],['astro', 'Astrophotography'],['longexp', 'Long exposure'],['wildsport', 'Wildlife & sport'],['macro', 'Macro']];
 
   const themes = [
@@ -443,9 +470,17 @@
   // ============ VERSION & CHANGELOG ============
   // Bump VERSION and add a new entry to CHANGELOG for each release.
   // Types: 'new' (feature), 'imp' (improvement), 'fix' (bug fix)
-  const VERSION = '1.2.0';
+  const VERSION = '1.3.0';
   const VERSION_DATE = '2026-10-24';
   const CHANGELOG = [
+    {
+      v: '1.3.0', date: '2026-10-24',
+      changes: [
+        { t: 'new', m: 'Exact one-tap presets for every genre' },
+        { t: 'new', m: 'Send to camera: when opened through the local shotref bridge, apply a preset over Wi-Fi or USB' },
+        { t: 'imp', m: 'The public version still makes no network requests at all' }
+      ]
+    },
     {
       v: '1.2.0', date: '2026-10-24',
       changes: [
@@ -1066,7 +1101,65 @@
 
   const RENDER = { memory: renderMemory, astro: renderAstro, nd: renderNd, dof: renderDof, light: renderLight };
 
+  // ============ CAMERA BRIDGE ============
+  // Only active when this page is served by the local shotref bridge, which injects
+  // <meta name="shotref-bridge">. The bridge serves the page itself so requests stay
+  // same-origin (an https page could not call a plain-http device on the local network).
+  const BRIDGE = !!document.querySelector('meta[name="shotref-bridge"]');
+
+  async function bridgeCall(path, body) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
+    try {
+      const res = await fetch(path, body
+        ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ctrl.signal }
+        : { signal: ctrl.signal });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || ('Bridge answered ' + res.status));
+      return json;
+    } finally { clearTimeout(timer); }
+  }
+
+  function renderBridgeCard(key) {
+    const card = document.getElementById('bridgeCard');
+    const preset = PRESETS[key];
+    if (!BRIDGE || !preset) { card.innerHTML = ''; return; }
+    card.innerHTML = `
+      <div class="section-label" style="margin-top: 1rem;">Send to camera</div>
+      <div class="card-box" style="margin-bottom: 10px;">
+        ${Object.keys(PRESET_LABELS).map(k => `<div class="row"><span class="lbl">${PRESET_LABELS[k][0]}</span><span class="val">${escapeHtml(PRESET_LABELS[k][1](preset[k]))}</span></div>`).join('')}
+      </div>
+      <div id="bridgeStatus" class="sub" style="font-size: 13px; margin-bottom: 10px;">Checking bridge…</div>
+      <button id="bridgeSend" class="nav-btn" style="width: 100%; justify-content: center;" disabled>📡 Send to camera</button>
+      <div id="bridgeResult" style="margin: 12px 0 1.5rem;"></div>`;
+    const status = document.getElementById('bridgeStatus');
+    const btn = document.getElementById('bridgeSend');
+    bridgeCall('/api/status').then(s => {
+      if (currentGenre !== key) return;
+      status.textContent = s.connected
+        ? `Connected: ${s.model || 'camera'}${s.backend === 'mock' ? ' (test mode — no real camera)' : ''}`
+        : 'Bridge running, but no camera connected. Check PC Remote on the camera.';
+      btn.disabled = !s.connected;
+    }).catch(() => { status.textContent = 'Bridge not reachable.'; });
+    btn.addEventListener('click', async () => {
+      const out = document.getElementById('bridgeResult');
+      btn.disabled = true; btn.textContent = 'Sending…'; out.innerHTML = '';
+      try {
+        const r = await bridgeCall('/api/apply', { genre: key, preset });
+        const okCount = r.results.filter(x => x.ok).length;
+        out.innerHTML = `
+          <div class="result"><div class="r-lbl">${okCount === r.results.length ? 'All set' : 'Partly applied'}</div>
+            <div class="r-big" style="font-size: 26px;">${okCount} / ${r.results.length}</div></div>
+          <div class="card-box">${r.results.map(x => `<div class="row"><span class="lbl">${x.ok ? '✓' : '✗'} ${escapeHtml(PRESET_LABELS[x.setting] ? PRESET_LABELS[x.setting][0] : x.setting)}</span><span class="val" style="font-size: 13px;">${escapeHtml(x.message || '')}</span></div>`).join('')}</div>
+          ${r.manual && r.manual.length ? `<div class="tip-box" style="font-size: 14px; margin-top: 10px;"><strong>Do this on the camera:</strong><br>${r.manual.map(escapeHtml).join('<br>')}</div>` : ''}`;
+      } catch (e) {
+        out.innerHTML = `<div class="err" style="font-size: 14px;">Could not send: ${escapeHtml(e.name === 'AbortError' ? 'the bridge did not answer in time' : e.message)}</div>`;
+      } finally { btn.disabled = false; btn.textContent = '📡 Send to camera'; }
+    });
+  }
+
   function renderDetailExtras(key) {
+    renderBridgeCard(key);
     const slots = mrSlots();
     const slot = Object.keys(slots).find(n => slots[n] === key);
     document.getElementById('mrBadge').innerHTML = slot ? `<span class="mr-badge">On mode dial ${slot}</span>` : '';
