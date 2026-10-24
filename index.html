@@ -209,6 +209,87 @@
 
   .changelog-toggle { width: 100%; justify-content: center; margin-top: 4px; }
   .changelog-collapsed .changelog-entry:nth-child(n+3) { display: none; }
+
+  /* TOOLS */
+  .tool-list { display: flex; flex-direction: column; gap: 10px; padding: 0 1.25rem 2.5rem; }
+  .tool-tile { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; text-align: left; color: inherit; font-family: inherit; min-height: 64px; width: 100%; -webkit-appearance: none; transition: transform 0.1s, background 0.15s; }
+  .tool-tile:active { transform: scale(0.98); }
+  .tool-tile .t-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .tool-tile .t-name { font-size: 16px; font-weight: 600; display: block; }
+  .tool-tile .t-sub { font-size: 12px; margin-top: 2px; display: block; line-height: 1.4; }
+  .tool-tile .t-chev { margin-left: auto; opacity: 0.4; font-size: 18px; }
+  .theme-black .tool-tile { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1); }
+  .theme-black .tool-tile .t-icon { background: rgba(255,184,77,0.12); }
+  .theme-black .tool-tile .t-sub { color: #999; }
+  .theme-white .tool-tile { background: #fff; border: 0.5px solid rgba(0,0,0,0.08); }
+  .theme-white .tool-tile .t-icon { background: #fff5e0; }
+  .theme-white .tool-tile .t-sub { color: #777; }
+  .theme-red .tool-tile { background: rgba(213,69,69,0.06); border: 0.5px solid rgba(213,69,69,0.25); }
+  .theme-red .tool-tile .t-icon { background: rgba(213,69,69,0.15); filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); }
+  .theme-red .tool-tile .t-sub { color: #a83838; }
+
+  .field { margin-bottom: 14px; }
+  .field > label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; opacity: 0.75; }
+  .ctl { width: 100%; font-family: inherit; font-size: 17px; padding: 12px 14px; border-radius: 12px; -webkit-appearance: none; appearance: none; min-height: 48px; outline: none; }
+  select.ctl { padding-right: 38px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: right 14px center !important; background-size: 12px 8px !important; }
+  .ctl-row { display: flex; gap: 10px; }
+  .ctl-row > * { flex: 1; min-width: 0; }
+  .theme-black .ctl { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.18); color: #fff; color-scheme: dark; }
+  .theme-white .ctl { background: #fff; border: 0.5px solid rgba(0,0,0,0.15); color: #1a1a1a; color-scheme: light; }
+  .theme-red .ctl { background: rgba(213,69,69,0.08); border: 0.5px solid rgba(213,69,69,0.35); color: #ff5555; color-scheme: dark; }
+  .ctl:focus { border-color: #ffb84d; }
+  .theme-red .ctl:focus { border-color: #ff5555; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 9px 14px; border-radius: 100px; font-size: 14px; font-weight: 500; min-height: 40px; font-family: inherit; -webkit-appearance: none; }
+  .theme-black .chip { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.18); color: #ddd; }
+  .theme-black .chip.on { background: #ffb84d; border-color: #ffb84d; color: #1a1000; }
+  .theme-white .chip { background: #fff; border: 0.5px solid rgba(0,0,0,0.15); color: #2a2a2a; }
+  .theme-white .chip.on { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+  .theme-red .chip { background: rgba(213,69,69,0.06); border: 0.5px solid rgba(213,69,69,0.3); color: #d54545; }
+  .theme-red .chip.on { background: rgba(213,69,69,0.3); border-color: #ff5555; color: #ff7777; }
+
+  .result { border-radius: 16px; padding: 18px; margin: 6px 0 14px; }
+  .result .r-lbl { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; opacity: 0.7; }
+  .result .r-big { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 34px; font-weight: 600; letter-spacing: -0.02em; margin-top: 4px; line-height: 1.15; }
+  .result .r-note { font-size: 13px; margin-top: 6px; opacity: 0.75; line-height: 1.5; }
+  .theme-black .result { background: rgba(255,184,77,0.1); border: 0.5px solid rgba(255,184,77,0.35); }
+  .theme-black .result .r-big { color: #ffcf80; }
+  .theme-white .result { background: #fff5e0; border: 0.5px solid #f0d9a0; color: #4a3500; }
+  .theme-red .result { background: rgba(213,69,69,0.1); border: 0.5px solid rgba(213,69,69,0.4); }
+  .theme-red .result .r-big { color: #ff5555; }
+
+  .timeline { display: flex; flex-direction: column; gap: 8px; }
+  .tl-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; }
+  .tl-item .tl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tl-item .tl-name { font-size: 15px; font-weight: 500; flex: 1; }
+  .tl-item .tl-time { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 15px; font-weight: 600; }
+  .theme-black .tl-item { background: rgba(255,255,255,0.04); }
+  .theme-white .tl-item { background: #fff; border: 0.5px solid rgba(0,0,0,0.06); }
+  .theme-red .tl-item { background: rgba(213,69,69,0.06); }
+  .tl-blue { background: #5a8ad4; }
+  .tl-gold { background: #ffb84d; }
+  .tl-sun { background: #ffec99; }
+  .tl-night { background: #6a5acd; }
+  .theme-red .tl-dot { background: #d54545 !important; }
+
+  .slot-card { border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
+  .slot-card .slot-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .slot-card .slot-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0; }
+  .slot-card .slot-sum { font-size: 13px; line-height: 1.5; margin-top: 8px; opacity: 0.8; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .theme-black .slot-card { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.1); }
+  .theme-black .slot-card .slot-num { background: #ffb84d; color: #1a1000; }
+  .theme-white .slot-card { background: #fff; border: 0.5px solid rgba(0,0,0,0.08); }
+  .theme-white .slot-card .slot-num { background: #1a1a1a; color: #fff; }
+  .theme-red .slot-card { background: rgba(213,69,69,0.06); border: 0.5px solid rgba(213,69,69,0.25); }
+  .theme-red .slot-card .slot-num { background: rgba(213,69,69,0.3); color: #ff7777; }
+
+  .mr-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 5px 11px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+  .theme-black .mr-badge { background: rgba(255,184,77,0.15); color: #ffcf80; }
+  .theme-white .mr-badge { background: #fff0d0; color: #8a5a00; }
+  .theme-red .mr-badge { background: rgba(213,69,69,0.18); color: #ff5555; }
+  .err { font-size: 13px; color: #ff8080; margin-top: 6px; }
+  .theme-white .err { color: #c44; }
 </style>
 </head>
 <body>
@@ -226,6 +307,25 @@
       <div class="h1" style="font-size: 28px; font-weight: 600; margin-top: 4px; letter-spacing: -0.02em;">Shot reference</div>
     </div>
     <div id="genreGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0.5rem 1.25rem 2rem;"></div>
+    <div class="section-label" style="padding: 0 1.25rem; margin-bottom: 0.75rem;">Tools</div>
+    <div id="toolList" class="tool-list"></div>
+  </div>
+
+  <!-- TOOL -->
+  <div id="toolView" style="display: none;">
+    <div class="nav-row">
+      <button id="backBtnTool" class="nav-btn">← Back</button>
+      <div class="nav-spacer"></div>
+      <button id="settingsBtnTool" class="nav-btn">⚙</button>
+    </div>
+    <div style="padding: 0.5rem 1.25rem 2rem;">
+      <div style="margin-bottom: 1.5rem;">
+        <div id="toolTitle" class="h1" style="font-size: 26px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;"></div>
+        <div id="toolSub" class="sub" style="font-size: 14px; margin-top: 6px;"></div>
+      </div>
+      <div id="toolBody"></div>
+      <button id="backBtnToolBottom" class="nav-btn" style="width: 100%; justify-content: center; margin-top: 1rem;">← Back to home</button>
+    </div>
   </div>
 
   <!-- DETAIL -->
@@ -246,13 +346,15 @@
       <div style="margin-bottom: 1.75rem;">
         <div id="detailTitle" class="h1" style="font-size: 26px; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;"></div>
         <div id="detailSub" class="sub" style="font-size: 14px; margin-top: 6px;"></div>
+        <div id="mrBadge"></div>
       </div>
       <div class="section-label">Step by step</div>
       <div id="menuSteps" style="margin-bottom: 2rem;"></div>
       <div class="section-label">Settings at a glance</div>
       <div id="settingsBox" class="card-box" style="margin-bottom: 2rem;"></div>
       <div class="section-label">Field tip</div>
-      <div id="tipBox" class="tip-box" style="margin-bottom: 2rem;"></div>
+      <div id="tipBox" class="tip-box" style="margin-bottom: 1rem;"></div>
+      <div id="relatedTools" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem;"></div>
       <button id="backBtnBottom" class="nav-btn" style="width: 100%; justify-content: center;">← Back to genres</button>
     </div>
   </div>
@@ -341,9 +443,21 @@
   // ============ VERSION & CHANGELOG ============
   // Bump VERSION and add a new entry to CHANGELOG for each release.
   // Types: 'new' (feature), 'imp' (improvement), 'fix' (bug fix)
-  const VERSION = '1.1.0';
-  const VERSION_DATE = '2026-05-29';
+  const VERSION = '1.2.0';
+  const VERSION_DATE = '2026-10-24';
   const CHANGELOG = [
+    {
+      v: '1.2.0', date: '2026-10-24',
+      changes: [
+        { t: 'new', m: 'Tools section on the home screen' },
+        { t: 'new', m: 'Camera memory 1·2·3: plan which genres live on the mode dial, with the exact save steps' },
+        { t: 'new', m: 'Star trail calculator: NPF rule tuned to the α7C II sensor, plus the 500 rule' },
+        { t: 'new', m: 'Golden & blue hour: sun times, full darkness and moon phase, calculated offline on the device' },
+        { t: 'new', m: 'ND filter calculator with polariser option and BULB hint' },
+        { t: 'new', m: 'Depth of field and hyperfocal distance calculator' },
+        { t: 'imp', m: 'Genre pages link to the matching tools and show which dial slot they are saved on' }
+      ]
+    },
     {
       v: '1.1.0', date: '2026-05-29',
       changes: [
@@ -513,9 +627,11 @@
   function showHome() {
     detailView.style.display = 'none';
     settingsView.style.display = 'none';
+    toolView.style.display = 'none';
     homeView.style.display = 'block';
     if (currentTheme !== userChosenTheme) applyTheme(userChosenTheme);
     renderGenreTiles();
+    renderToolTiles();
     window.scrollTo(0, 0);
   }
   function showDetail(key, name) {
@@ -530,8 +646,10 @@
     heroImg.innerHTML = photo ? `<img src="${photo}" class="hero-img" alt="">` : ART[key];
     hero.classList.toggle('has-photo', !!photo);
     uploadLabel.textContent = photo ? 'Replace' : 'Add photo';
+    renderDetailExtras(key);
     homeView.style.display = 'none';
     settingsView.style.display = 'none';
+    toolView.style.display = 'none';
     detailView.style.display = 'block';
     if ((key === 'astro' || key === 'longexp') && userChosenTheme !== 'red') applyTheme('red');
     else if (currentTheme !== userChosenTheme) applyTheme(userChosenTheme);
@@ -540,6 +658,7 @@
   function showSettings() {
     homeView.style.display = 'none';
     detailView.style.display = 'none';
+    toolView.style.display = 'none';
     settingsView.style.display = 'block';
     renderThemePicker();
     renderVersion();
@@ -625,6 +744,341 @@
     fileInput.value = '';
   });
 
+  // ============ TOOLS ============
+  const toolView = document.getElementById('toolView');
+  const toolBody = document.getElementById('toolBody');
+  const TOOL_ORDER = ['memory', 'astro', 'light', 'nd', 'dof'];
+  const TOOLS = {
+    memory: { name: 'Camera memory 1 · 2 · 3', sub: 'Put your favourite genres on the mode dial', icon: '①' },
+    astro:  { name: 'Star trail calculator', sub: 'Longest shutter before stars smear', icon: '✦', red: true },
+    light:  { name: 'Golden & blue hour', sub: 'Sun times, darkness and moon phase', icon: '☀' },
+    nd:     { name: 'ND filter calculator', sub: 'Your new shutter speed with a filter', icon: '◐' },
+    dof:    { name: 'Depth of field', sub: 'Hyperfocal distance and sharp zone', icon: '◎' }
+  };
+  const RELATED = {
+    portrait: ['dof'], street: ['dof'], landscape: ['dof', 'light'], family: [],
+    astro: ['astro', 'light'], longexp: ['nd', 'light'], wildsport: ['light'], macro: ['dof']
+  };
+  let toolReturnGenre = null;
+
+  // α7C II: 7008 px across a 35.9 mm sensor → ~5.12 µm pixel pitch
+  const PIXEL_PITCH_UM = 5.12;
+  const COC_MM = 0.03; // full frame circle of confusion
+  const APERTURES = [1.4, 1.8, 2, 2.8, 4, 5.6, 8, 11, 16];
+
+  // Standard 1/3-stop shutter speeds, from 1/8000 s to 30 s
+  const SHUTTERS = [8000,6400,5000,4000,3200,2500,2000,1600,1250,1000,800,640,500,400,320,250,200,160,125,100,80,60,50,40,30,25,20,15,13,10,8,6,5,4]
+    .map(d => ({ s: 1 / d, l: '1/' + d }))
+    .concat([0.3,0.4,0.5,0.6,0.8,1,1.3,1.6,2,2.5,3.2,4,5,6,8,10,13,15,20,25,30].map(s => ({ s, l: s + '"' })));
+
+  function fmtTime(sec) {
+    if (!isFinite(sec)) return '—';
+    if (sec < 0.3) return '1/' + Math.round(1 / sec) + ' s';
+    if (sec < 10) return (Math.round(sec * 10) / 10) + ' s';
+    if (sec < 60) return Math.round(sec) + ' s';
+    if (sec < 3600) {
+      const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+      return s ? `${m} min ${s} s` : `${m} min`;
+    }
+    const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60);
+    return m ? `${h} h ${m} min` : `${h} h`;
+  }
+  function fmtDist(mm) {
+    if (!isFinite(mm)) return '∞';
+    if (mm < 1000) return (mm < 100 ? (Math.round(mm) / 10).toFixed(1) : Math.round(mm / 10)) + ' cm';
+    const m = mm / 1000;
+    return (m < 10 ? m.toFixed(2) : m.toFixed(1)) + ' m';
+  }
+  function num(id) { const v = parseFloat(String(document.getElementById(id).value).replace(',', '.')); return isFinite(v) ? v : NaN; }
+  function chipRow(id, items, selected) {
+    return `<div class="chips" id="${id}">${items.map(([v, l]) => `<button type="button" class="chip ${String(v) === String(selected) ? 'on' : ''}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  }
+  function wireChips(id, onPick) {
+    const row = document.getElementById(id);
+    row.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+      row.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+      c.classList.add('on');
+      onPick(c.dataset.v);
+    }));
+  }
+  function getStore(k, fallback) { try { const s = localStorage.getItem(k); return s ? JSON.parse(s) : fallback; } catch (e) { return fallback; } }
+  function putStore(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  function toolTileHtml(key) {
+    const t = TOOLS[key];
+    return `<button class="tool-tile" data-tool="${key}"><span class="t-icon">${t.icon}</span><span><span class="t-name">${t.name}</span><span class="t-sub">${t.sub}</span></span><span class="t-chev">›</span></button>`;
+  }
+  function renderToolTiles() {
+    const list = document.getElementById('toolList');
+    list.innerHTML = TOOL_ORDER.map(toolTileHtml).join('');
+    list.querySelectorAll('.tool-tile').forEach(el => el.addEventListener('click', () => showTool(el.dataset.tool, null)));
+  }
+
+  function showTool(key, fromGenre) {
+    toolReturnGenre = fromGenre;
+    const t = TOOLS[key];
+    document.getElementById('toolTitle').textContent = t.name;
+    document.getElementById('toolSub').textContent = t.sub;
+    homeView.style.display = 'none';
+    detailView.style.display = 'none';
+    settingsView.style.display = 'none';
+    toolView.style.display = 'block';
+    if (t.red && userChosenTheme !== 'red') applyTheme('red');
+    else if (!t.red && currentTheme !== userChosenTheme) applyTheme(userChosenTheme);
+    RENDER[key]();
+    window.scrollTo(0, 0);
+  }
+  function leaveTool() {
+    if (toolReturnGenre) showDetail(toolReturnGenre, genres.find(g => g[0] === toolReturnGenre)[1]);
+    else showHome();
+  }
+
+  // ---- Camera memory (mode dial 1/2/3) ----
+  function mrSlots() { return getStore('shotref_mr', {}); }
+  function slotSummary(key) {
+    const pick = ['Mode', 'Aperture', 'Shutter', 'Min shutter', 'ISO', 'Focus'];
+    return data[key].settings.filter(([l]) => pick.includes(l)).map(([l, v]) => `${l}: ${v}`).join('<br>');
+  }
+  function renderMemory() {
+    const slots = mrSlots();
+    const opts = [['', '— empty —']].concat(genres);
+    toolBody.innerHTML = `
+      <div class="tip-box" style="font-size: 14px; margin-bottom: 1.5rem;">The α7C II stores up to three complete setups in the camera body. Saved once, each genre is a single turn of the mode dial away — no menus in the field.</div>
+      <div class="section-label">Your dial</div>
+      ${[1, 2, 3].map(n => `
+        <div class="slot-card">
+          <div class="slot-head"><div class="slot-num">${n}</div>
+            <select class="ctl" data-slot="${n}">${opts.map(([k, l]) => `<option value="${k}" ${slots[n] === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
+          </div>
+          <div id="slotInfo${n}"></div>
+        </div>`).join('')}
+      <div class="section-label" style="margin-top: 1.5rem;">Save a slot on the camera</div>
+      <div class="menu-step" data-n="1">Open the genre in shotref and set the camera <strong>exactly as listed</strong></div>
+      <div class="menu-step" data-n="2">Press <strong>MENU</strong> → <strong>Shooting</strong> (camera icon) → <strong>Shooting Mode</strong></div>
+      <div class="menu-step" data-n="3">Choose <strong>Camera Set. Memory</strong></div>
+      <div class="menu-step" data-n="4">Pick <strong>1</strong>, <strong>2</strong> or <strong>3</strong> and press the <strong>centre</strong> of the control wheel</div>
+      <div class="section-label" style="margin-top: 1.5rem;">Use it</div>
+      <div class="menu-step" data-n="1">Turn the <strong>mode dial</strong> to <strong>1</strong>, <strong>2</strong> or <strong>3</strong> — done</div>
+      <div class="tip-box" style="font-size: 14px; margin-top: 1rem;">Slots are kept separately for stills, movie and S&amp;Q. To update a slot, change the settings and register again to the same number. Four more setups (M1–M4) fit on the memory card: MENU → Shooting Mode → Recall Camera Setting. Program Shift is not stored.</div>`;
+    function paint(n) {
+      const k = mrSlots()[n];
+      const box = document.getElementById('slotInfo' + n);
+      if (!k) { box.innerHTML = '<div class="sub" style="font-size: 13px;">Pick a genre to plan this slot.</div>'; return; }
+      box.innerHTML = `<div class="slot-sum">${slotSummary(k)}</div><button class="nav-btn" style="margin-top: 10px; width: 100%; justify-content: center;" data-open="${k}">Show full settings →</button>`;
+      box.querySelector('[data-open]').addEventListener('click', () => showDetail(k, genres.find(g => g[0] === k)[1]));
+    }
+    toolBody.querySelectorAll('select[data-slot]').forEach(sel => sel.addEventListener('change', () => {
+      const s = mrSlots();
+      if (sel.value) s[sel.dataset.slot] = sel.value; else delete s[sel.dataset.slot];
+      putStore('shotref_mr', s);
+      paint(sel.dataset.slot);
+    }));
+    [1, 2, 3].forEach(paint);
+  }
+
+  // ---- Star trail calculator (500 rule + NPF rule) ----
+  function renderAstro() {
+    const st = getStore('shotref_astro', { f: 24, n: 1.8 });
+    toolBody.innerHTML = `
+      <div class="field"><label for="astroF">Focal length (mm)</label><input id="astroF" class="ctl" type="number" inputmode="decimal" min="8" max="800" value="${st.f}"><div id="astroErr" class="err"></div></div>
+      <div class="field"><label>Aperture</label>${chipRow('astroN', APERTURES.slice(0, 5).map(a => [a, 'f/' + a]), st.n)}</div>
+      <div class="result"><div class="r-lbl">Sharp stars · NPF rule</div><div id="astroNpf" class="r-big"></div><div class="r-note">Stars stay pin-sharp even when you zoom in to 100 %. Best for prints and crops.</div></div>
+      <div class="result"><div class="r-lbl">Quick · 500 rule</div><div id="astro500" class="r-big"></div><div class="r-note">Fine for phone and web viewing. Stars show slight trails at 100 %.</div></div>
+      <div class="section-label" style="margin-top: 1.5rem;">At this aperture</div>
+      <div id="astroTable" class="card-box"></div>
+      <div class="tip-box" style="font-size: 14px; margin-top: 1.5rem;">Use the NPF time, then raise ISO until the histogram sits about a third from the left. If you shoot in APS-C crop mode, multiply the focal length by 1.5.</div>`;
+    const npf = (f, n) => (35 * n + 30 * PIXEL_PITCH_UM) / f;
+    function calc() {
+      const f = num('astroF');
+      const err = document.getElementById('astroErr');
+      if (!(f >= 8 && f <= 800)) { err.textContent = 'Enter a focal length between 8 and 800 mm'; document.getElementById('astroNpf').textContent = '—'; document.getElementById('astro500').textContent = '—'; return; }
+      err.textContent = '';
+      st.f = f; putStore('shotref_astro', st);
+      document.getElementById('astroNpf').textContent = fmtTime(npf(f, st.n));
+      document.getElementById('astro500').textContent = fmtTime(500 / f);
+      document.getElementById('astroTable').innerHTML = [14, 20, 24, 35, 50].map(fl =>
+        `<div class="row"><span class="lbl">${fl} mm</span><span class="val">${fmtTime(npf(fl, st.n))} · ${fmtTime(500 / fl)}</span></div>`).join('') +
+        '<div class="row"><span class="lbl" style="font-size: 12px;">NPF · 500 rule</span><span></span></div>';
+    }
+    document.getElementById('astroF').addEventListener('input', calc);
+    wireChips('astroN', v => { st.n = parseFloat(v); putStore('shotref_astro', st); calc(); });
+    calc();
+  }
+
+  // ---- ND filter calculator ----
+  function renderNd() {
+    const st = getStore('shotref_nd', { base: '1/60', stops: 10, cpl: false });
+    const ND = [[1, 'ND2'], [2, 'ND4'], [3, 'ND8'], [4, 'ND16'], [6, 'ND64'], [10, 'ND1000'], [15, 'ND32000']];
+    toolBody.innerHTML = `
+      <div class="field"><label for="ndBase">Shutter without filter</label><select id="ndBase" class="ctl">${SHUTTERS.map(x => `<option value="${x.l}" ${x.l === st.base ? 'selected' : ''}>${x.l.replace('"', ' s')}${x.s < 0.3 ? ' s' : ''}</option>`).join('')}</select></div>
+      <div class="field"><label>Filter</label>${chipRow('ndStops', ND.map(([s, l]) => [s, `${l} · ${s} stops`]), st.stops)}</div>
+      <div class="field"><label>Extras</label>${chipRow('ndCpl', [[0, 'No polariser'], [1, '+ Polariser']], st.cpl ? 1 : 0)}</div>
+      <div class="result"><div class="r-lbl">New shutter speed</div><div id="ndOut" class="r-big"></div><div id="ndNote" class="r-note"></div></div>
+      <div class="tip-box" style="font-size: 14px;">Meter and focus <strong>before</strong> you screw the filter on, then switch to MF. Cover the viewfinder during long exposures so stray light doesn't leak in.</div>`;
+    function calc() {
+      const base = SHUTTERS.find(x => x.l === st.base) || SHUTTERS[21];
+      const stops = st.stops + (st.cpl ? 1.7 : 0);
+      const t = base.s * Math.pow(2, stops);
+      document.getElementById('ndOut').textContent = fmtTime(t);
+      document.getElementById('ndNote').textContent = (t > 30
+        ? 'Longer than 30 s: turn the shutter to BULB and time it with a remote or the self-timer.'
+        : 'Set this directly in M mode.') + ` Total: ${Math.round(stops * 10) / 10} stops.`;
+    }
+    document.getElementById('ndBase').addEventListener('change', e => { st.base = e.target.value; putStore('shotref_nd', st); calc(); });
+    wireChips('ndStops', v => { st.stops = parseInt(v, 10); putStore('shotref_nd', st); calc(); });
+    wireChips('ndCpl', v => { st.cpl = v === '1'; putStore('shotref_nd', st); calc(); });
+    calc();
+  }
+
+  // ---- Depth of field / hyperfocal ----
+  function renderDof() {
+    const st = getStore('shotref_dof', { f: 35, n: 8, d: 3 });
+    toolBody.innerHTML = `
+      <div class="ctl-row">
+        <div class="field"><label for="dofF">Focal length (mm)</label><input id="dofF" class="ctl" type="number" inputmode="decimal" value="${st.f}"></div>
+        <div class="field"><label for="dofD">Focus distance (m)</label><input id="dofD" class="ctl" type="number" inputmode="decimal" step="0.1" value="${st.d}"></div>
+      </div>
+      <div id="dofErr" class="err" style="margin: -6px 0 10px;"></div>
+      <div class="field"><label>Aperture</label>${chipRow('dofN', APERTURES.map(a => [a, 'f/' + a]), st.n)}</div>
+      <div class="result"><div class="r-lbl">Sharp from → to</div><div id="dofRange" class="r-big" style="font-size: 26px;"></div><div id="dofTotal" class="r-note"></div></div>
+      <div class="result"><div class="r-lbl">Hyperfocal distance</div><div id="dofH" class="r-big"></div><div id="dofHNote" class="r-note"></div></div>
+      <div class="tip-box" style="font-size: 14px;">For landscapes, focus at the hyperfocal distance to get everything from half that distance to infinity acceptably sharp. Values use a 0.03 mm circle of confusion (full frame).</div>`;
+    function calc() {
+      const f = num('dofF'), dm = num('dofD'), n = st.n;
+      const err = document.getElementById('dofErr');
+      if (!(f >= 8 && f <= 800) || !(dm > 0 && dm <= 10000)) {
+        err.textContent = !(f >= 8 && f <= 800) ? 'Enter a focal length between 8 and 800 mm' : 'Enter a focus distance greater than 0 m';
+        ['dofRange', 'dofH'].forEach(id => document.getElementById(id).textContent = '—');
+        document.getElementById('dofTotal').textContent = ''; document.getElementById('dofHNote').textContent = '';
+        return;
+      }
+      err.textContent = '';
+      Object.assign(st, { f, d: dm }); putStore('shotref_dof', st);
+      const H = f * f / (n * COC_MM) + f;
+      const s = dm * 1000;
+      const near = s * (H - f) / (H + s - 2 * f);
+      const far = s < H ? s * (H - f) / (H - s) : Infinity;
+      document.getElementById('dofRange').textContent = `${fmtDist(near)} → ${fmtDist(far)}`;
+      document.getElementById('dofTotal').textContent = isFinite(far) ? `Total depth of field: ${fmtDist(far - near)}` : 'Everything up to infinity is sharp.';
+      document.getElementById('dofH').textContent = fmtDist(H);
+      document.getElementById('dofHNote').textContent = `Focus here and everything from ${fmtDist(H / 2)} to infinity is sharp.`;
+    }
+    ['dofF', 'dofD'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+    wireChips('dofN', v => { st.n = parseFloat(v); putStore('shotref_dof', st); calc(); });
+    calc();
+  }
+
+  // ---- Sun & moon (algorithm after V. Agafonkin's SunCalc / NOAA) ----
+  const RAD = Math.PI / 180, DAY_MS = 86400000, J1970 = 2440588, J2000 = 2451545, OBL = RAD * 23.4397;
+  const toJulian = d => d.valueOf() / DAY_MS - 0.5 + J1970;
+  const fromJulian = j => new Date((j + 0.5 - J1970) * DAY_MS);
+  function sunEvents(date, lat, lng) {
+    const lw = RAD * -lng, phi = RAD * lat, d = toJulian(date) - J2000;
+    const n = Math.round(d - 0.0009 - lw / (2 * Math.PI));
+    const ds = 0.0009 + lw / (2 * Math.PI) + n;
+    const M = RAD * (357.5291 + 0.98560028 * ds);
+    const C = RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M));
+    const L = M + C + RAD * 102.9372 + Math.PI;
+    const dec = Math.asin(Math.sin(OBL) * Math.sin(L));
+    const transit = a => J2000 + a + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
+    const jNoon = transit(ds);
+    return function at(hDeg) {
+      const w = Math.acos((Math.sin(hDeg * RAD) - Math.sin(phi) * Math.sin(dec)) / (Math.cos(phi) * Math.cos(dec)));
+      if (isNaN(w)) return { rise: null, set: null };
+      const jSet = transit(0.0009 + (w + lw) / (2 * Math.PI) + n);
+      return { rise: fromJulian(jNoon - (jSet - jNoon)), set: fromJulian(jSet) };
+    };
+  }
+  function moonInfo(date) {
+    const SYN = 29.530588853;
+    const age = (((toJulian(date) - 2451550.1) % SYN) + SYN) % SYN;
+    const illum = (1 - Math.cos(2 * Math.PI * age / SYN)) / 2;
+    const names = ['New moon', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full moon', 'Waning gibbous', 'Last quarter', 'Waning crescent'];
+    const name = names[Math.floor(((age / SYN) * 8 + 0.5)) % 8];
+    return { age, illum, name, toNew: SYN - age };
+  }
+  function renderLight() {
+    const loc = getStore('shotref_loc', null);
+    const today = new Date();
+    const iso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    toolBody.innerHTML = `
+      <div class="field"><label for="lightDate">Date</label><input id="lightDate" class="ctl" type="date" value="${iso}"></div>
+      <div class="ctl-row">
+        <div class="field"><label for="lightLat">Latitude</label><input id="lightLat" class="ctl" type="text" inputmode="decimal" placeholder="52.52" value="${loc ? loc.lat : ''}"></div>
+        <div class="field"><label for="lightLng">Longitude</label><input id="lightLng" class="ctl" type="text" inputmode="decimal" placeholder="13.40" value="${loc ? loc.lng : ''}"></div>
+      </div>
+      <button id="lightGps" class="nav-btn" style="width: 100%; justify-content: center; margin-bottom: 6px;">⌖ Use my location</button>
+      <div id="lightErr" class="err" style="margin-bottom: 10px;"></div>
+      <div id="lightOut"></div>
+      <div class="tip-box" style="font-size: 13px; margin-top: 1.5rem;">Everything is calculated on your device — your location is never sent anywhere. Times are shown in your phone's time zone and are accurate to a few minutes.</div>`;
+    const clock = d => d ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+    function calc() {
+      const lat = num('lightLat'), lng = num('lightLng');
+      const err = document.getElementById('lightErr'), out = document.getElementById('lightOut');
+      const dv = document.getElementById('lightDate').value;
+      if (!dv) { err.textContent = 'Pick a date'; out.innerHTML = ''; return; }
+      if (!(lat >= -90 && lat <= 90) || !(lng >= -180 && lng <= 180)) {
+        err.textContent = document.getElementById('lightLat').value || document.getElementById('lightLng').value
+          ? 'Latitude must be between −90 and 90, longitude between −180 and 180' : '';
+        out.innerHTML = '<div class="sub" style="font-size: 14px; padding: 8px 0;">Enter your coordinates or tap “Use my location”.</div>';
+        return;
+      }
+      err.textContent = '';
+      putStore('shotref_loc', { lat, lng });
+      const [y, m, d] = dv.split('-').map(Number);
+      const noon = new Date(y, m - 1, d, 12, 0, 0);
+      const at = sunEvents(noon, lat, lng);
+      const sun = at(-0.833), g = at(6), b = at(-4), c = at(-6), a = at(-18);
+      const span = (x, y2) => (x && y2) ? `${clock(x)} – ${clock(y2)}` : '—';
+      const items = [
+        ['tl-night', 'Night ends', clock(a.rise)],
+        ['tl-blue', 'Blue hour', span(c.rise, b.rise)],
+        ['tl-gold', 'Golden hour', span(b.rise, g.rise)],
+        ['tl-sun', 'Sunrise', clock(sun.rise)],
+        ['tl-sun', 'Sunset', clock(sun.set)],
+        ['tl-gold', 'Golden hour', span(g.set, b.set)],
+        ['tl-blue', 'Blue hour', span(b.set, c.set)],
+        ['tl-night', 'Full darkness', clock(a.set)]
+      ];
+      const moon = moonInfo(noon);
+      const dark = moon.illum < 0.25;
+      out.innerHTML = `
+        <div class="section-label" style="margin-top: 1rem;">Light</div>
+        <div class="timeline">${items.map(([cls, n, t]) => `<div class="tl-item"><span class="tl-dot ${cls}"></span><span class="tl-name">${n}</span><span class="tl-time">${t}</span></div>`).join('')}</div>
+        ${!sun.rise ? '<div class="sub" style="font-size: 13px; margin-top: 8px;">The sun does not rise or set on this day here (polar day or night).</div>' : ''}
+        <div class="section-label" style="margin-top: 1.5rem;">Moon</div>
+        <div class="result"><div class="r-lbl">${moon.name}</div><div class="r-big">${Math.round(moon.illum * 100)} %</div>
+          <div class="r-note">${dark ? 'Dark sky — a good night for the Milky Way.' : 'Bright moon washes out faint stars. Better for moonlit landscapes.'} Next new moon in ${Math.round(moon.toNew)} days.</div></div>`;
+    }
+    ['lightLat', 'lightLng', 'lightDate'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+    document.getElementById('lightGps').addEventListener('click', () => {
+      const err = document.getElementById('lightErr');
+      if (!navigator.geolocation) { err.textContent = 'Location is not available on this device'; return; }
+      err.textContent = 'Locating…';
+      navigator.geolocation.getCurrentPosition(p => {
+        document.getElementById('lightLat').value = p.coords.latitude.toFixed(3);
+        document.getElementById('lightLng').value = p.coords.longitude.toFixed(3);
+        calc();
+      }, () => { err.textContent = 'Could not get your location — enter the coordinates manually'; }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+    });
+    calc();
+  }
+
+  const RENDER = { memory: renderMemory, astro: renderAstro, nd: renderNd, dof: renderDof, light: renderLight };
+
+  function renderDetailExtras(key) {
+    const slots = mrSlots();
+    const slot = Object.keys(slots).find(n => slots[n] === key);
+    document.getElementById('mrBadge').innerHTML = slot ? `<span class="mr-badge">On mode dial ${slot}</span>` : '';
+    const box = document.getElementById('relatedTools');
+    box.innerHTML = (RELATED[key] || []).concat('memory').map(toolTileHtml).join('');
+    box.querySelectorAll('.tool-tile').forEach(el => el.addEventListener('click', () => showTool(el.dataset.tool, key)));
+  }
+
+  document.getElementById('backBtnTool').addEventListener('click', leaveTool);
+  document.getElementById('backBtnToolBottom').addEventListener('click', leaveTool);
+  document.getElementById('settingsBtnTool').addEventListener('click', showSettings);
+
   // ============ WIRE EVENTS ============
   document.getElementById('settingsBtnHome').addEventListener('click', showSettings);
   document.getElementById('settingsBtnDetail').addEventListener('click', showSettings);
@@ -682,6 +1136,7 @@
 
   applyTheme(userChosenTheme);
   renderGenreTiles();
+  renderToolTiles();
   renderThemePicker();
 })();
 </script>

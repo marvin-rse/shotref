@@ -20,6 +20,14 @@ Pick a genre and get the recommended camera settings, the exact menu path to fin
 - Wildlife & sport — action and birds
 - Macro — close-up detail
 
+### Tools
+
+- **Camera memory 1 · 2 · 3** — plan which genres live on the mode dial positions 1, 2 and 3, with the exact steps to save them
+- **Star trail calculator** — longest shutter before stars smear (NPF rule tuned to the α7C II sensor, plus the 500 rule)
+- **Golden & blue hour** — sun times, full darkness and moon phase for any place and date, calculated on the device
+- **ND filter calculator** — your new shutter speed with ND filters and an optional polariser
+- **Depth of field** — sharp zone and hyperfocal distance
+
 You can also upload your own reference photos per genre (stored locally on your device, never uploaded anywhere). Tap a photo to see it full-screen with its EXIF metadata.
 
 ## Install on iPhone or iPad
