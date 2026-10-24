@@ -1151,7 +1151,14 @@
           <div class="result"><div class="r-lbl">${okCount === r.results.length ? 'All set' : 'Partly applied'}</div>
             <div class="r-big" style="font-size: 26px;">${okCount} / ${r.results.length}</div></div>
           <div class="card-box">${r.results.map(x => `<div class="row"><span class="lbl">${x.ok ? '✓' : '✗'} ${escapeHtml(PRESET_LABELS[x.setting] ? PRESET_LABELS[x.setting][0] : x.setting)}</span><span class="val" style="font-size: 13px;">${escapeHtml(x.message || '')}</span></div>`).join('')}</div>
-          ${r.manual && r.manual.length ? `<div class="tip-box" style="font-size: 14px; margin-top: 10px;"><strong>Do this on the camera:</strong><br>${r.manual.map(escapeHtml).join('<br>')}</div>` : ''}`;
+          ${r.manual && r.manual.length ? `<div class="tip-box" style="font-size: 14px; margin-top: 10px;"><strong>Do this on the camera:</strong><br>${r.manual.map(escapeHtml).join('<br>')}</div>` : ''}
+          <div class="sub" style="font-size: 13px; margin-top: 12px;">While connected, the camera follows the app instead of its own dials.</div>
+          <button id="bridgeRelease" class="nav-btn" style="width: 100%; justify-content: center; margin-top: 8px;">Give the dials back to the camera</button>`;
+        document.getElementById('bridgeRelease').addEventListener('click', async e => {
+          const b = e.currentTarget; b.disabled = true;
+          try { await bridgeCall('/api/release', {}); b.textContent = '✓ Dials work again'; }
+          catch (err) { b.disabled = false; b.textContent = 'Could not release — try again'; }
+        });
       } catch (e) {
         out.innerHTML = `<div class="err" style="font-size: 14px;">Could not send: ${escapeHtml(e.name === 'AbortError' ? 'the bridge did not answer in time' : e.message)}</div>`;
       } finally { btn.disabled = false; btn.textContent = '📡 Send to camera'; }

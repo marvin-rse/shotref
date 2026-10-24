@@ -40,6 +40,7 @@ class ValidationTest(unittest.TestCase):
     def test_manual_steps(self):
         steps = sb.manual_steps(sb.validate_preset(PORTRAIT), "M")
         self.assertIn("Turn the mode dial to A.", steps)
+        self.assertEqual(sb.manual_steps(sb.validate_preset(PORTRAIT), "A"), [])
         self.assertEqual(sb.manual_steps(sb.validate_preset(ASTRO), "M"), ["If your lens has an AF/MF switch, set it to MF."])
 
     def test_host_guard(self):
@@ -59,6 +60,7 @@ class HttpTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.server.shutdown()
+        cls.server.server_close()
 
     def req(self, method, path, body=None, headers=None):
         c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)
@@ -90,6 +92,12 @@ class HttpTest(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertTrue(all(r["ok"] for r in out["results"]))
         self.assertIn("f/1.8", [r["message"] for r in out["results"]])
+        self.assertEqual(out["dial"], "M")
+        self.assertEqual(out["manual"], ["If your lens has an AF/MF switch, set it to MF."])
+
+    def test_release(self):
+        status, data = self.req("POST", "/api/release", {})
+        self.assertEqual((status, json.loads(data)), (200, {"ok": True}))
 
     def test_rejects_cross_origin(self):
         status, _ = self.req("POST", "/api/apply", {"preset": ASTRO}, {"Origin": "https://evil.example.com"})
@@ -107,6 +115,57 @@ class HttpTest(unittest.TestCase):
         status, data = self.req("POST", "/api/apply", {"preset": {**ASTRO, "iso": 1}})
         self.assertEqual(status, 400)
         self.assertIn("iso", json.loads(data)["error"])
+
+
+FAKE_HELPER = """#!/usr/bin/env python3
+import json, sys
+for line in sys.stdin:
+    req = json.loads(line)
+    if req["cmd"] == "status":
+        out = {"connected": True, "model": "ILCE-7CM2", "dial": "M"}
+    elif req["cmd"] == "apply":
+        out = {"results": [{"setting": "iso", "ok": True, "message": "ISO 3200"}], "dial": req["preset"]["mode"]}
+    elif req["cmd"] == "release":
+        out = {"ok": True}
+    else:
+        out = {"error": "unknown command"}
+    if req.get("preset", {}).get("iso") == 999:
+        sys.exit(3)  # simulate a crash
+    print(json.dumps(out), flush=True)
+"""
+
+
+class SdkHelperProcessTest(unittest.TestCase):
+    """The long-lived helper plumbing, with a stand-in for the C++ helper."""
+
+    def setUp(self):
+        import os, tempfile
+        self.dir = tempfile.mkdtemp()
+        self.helper = os.path.join(self.dir, "fake-helper")
+        with open(self.helper, "w") as f:
+            f.write(FAKE_HELPER.replace("#!/usr/bin/env python3", "#!" + sys.executable))
+        os.chmod(self.helper, 0o755)
+        self.cam = sb.SdkHelperCamera(self.helper, timeout=5)
+
+    def tearDown(self):
+        self.cam.close()
+
+    def test_one_process_for_many_requests(self):
+        self.assertTrue(self.cam.status()["connected"])
+        pid = self.cam.proc.pid
+        self.assertEqual(self.cam.apply(ASTRO)["dial"], "M")
+        self.assertEqual(self.cam.release(), {"ok": True})
+        self.assertEqual(self.cam.proc.pid, pid)
+
+    def test_restarts_after_crash(self):
+        with self.assertRaises(RuntimeError):
+            self.cam.apply({**ASTRO, "iso": 999})
+        self.assertTrue(self.cam.status()["connected"])
+
+    def test_missing_helper(self):
+        cam = sb.SdkHelperCamera("/nonexistent/shotref-cam")
+        self.assertFalse(cam.status()["connected"])
+        self.assertIn("not found", cam.status()["error"])
 
 
 if __name__ == "__main__":
