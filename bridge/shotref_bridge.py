@@ -8,7 +8,8 @@ https://github.io could not call a plain-http device on the local network (mixed
 
 Backends
   mock  Simulated camera. Runs anywhere, no SDK needed. Use it to try the whole flow.
-  sdk   Calls the small C++ helper in sdk-helper/, which links Sony's Camera Remote SDK.
+  sdk   Runs the C++ helper in sdk-helper/ (links Sony's Camera Remote SDK) as a long-lived process,
+        so the camera session — and with it the PC-remote priority over the dials — stays open.
 
 Only the Python standard library is used, so it runs the same on a laptop and a Raspberry Pi.
 """
@@ -17,6 +18,7 @@ import argparse
 import ipaddress
 import json
 import logging
+import queue
 import re
 import socket
 import subprocess
@@ -38,7 +40,8 @@ DRIVES = {"single", "cont_lo", "cont_hi_plus", "timer_2s"}
 SHUTTER_RE = re.compile(r'^(1/\d{1,4}|\d{1,2}(\.\d)?"|bulb)$')
 
 # Settings the camera can take remotely, in the order they are applied.
-SETTABLE = ["fnumber", "shutter", "iso", "wb", "focus", "drive"]
+# "mode" works because the α7C II accepts PC-remote priority over its mode dial.
+SETTABLE = ["mode", "fnumber", "shutter", "iso", "wb", "focus", "drive"]
 
 
 class PresetError(ValueError):
@@ -98,7 +101,7 @@ def validate_preset(raw):
 def manual_steps(preset, dial_mode):
     """Things the camera cannot be told remotely, worded for the photographer."""
     steps = []
-    if dial_mode != preset["mode"]:
+    if dial_mode not in (preset["mode"], None, "unknown"):
         steps.append(f"Turn the mode dial to {preset['mode']}.")
     if preset["focus"] == "MF":
         steps.append("If your lens has an AF/MF switch, set it to MF.")
@@ -115,14 +118,19 @@ class MockCamera:
     name = "mock"
 
     def __init__(self):
-        self.state = {"dial": "M", "fnumber": 4.0, "shutter": "1/125", "iso": "auto",
-                      "wb": "auto", "focus": "AF-S", "drive": "single"}
+        self.state = {"mode": "P", "fnumber": 4.0, "shutter": "1/125", "iso": "auto",
+                      "wb": "auto", "focus": "AF-S", "drive": "single", "priority": "camera"}
         self.widest = 1.8
 
     def status(self):
-        return {"connected": True, "model": "ILCE-7CM2 (simulated)", "dial": self.state["dial"]}
+        return {"connected": True, "model": "ILCE-7CM2 (simulated)", "dial": self.state["mode"]}
+
+    def release(self):
+        self.state["priority"] = "camera"
+        return {"ok": True}
 
     def apply(self, preset):
+        self.state["priority"] = "pc"
         results = []
         for key in SETTABLE:
             value = preset[key]
@@ -135,46 +143,100 @@ class MockCamera:
                 continue
             self.state[key] = value
             results.append({"setting": key, "ok": True, "message": _fmt(key, value)})
-        return {"results": results, "dial": self.state["dial"]}
+        return {"results": results, "dial": self.state["mode"]}
 
 
 class SdkHelperCamera:
-    """Talks to sdk-helper (C++, links Sony's SDK) via JSON on stdin/stdout.
+    """Runs sdk-helper (C++, links Sony's SDK) as one long-lived process, one JSON line per request.
 
-    Contract:
-      shotref-cam status          -> {"connected": bool, "model": str, "dial": "M"|"A"|...}
-      shotref-cam apply < preset  -> {"results": [{"setting","ok","message"}], "dial": str}
+    Keeping it alive keeps the camera session open, which the α7C II needs to keep PC-remote
+    priority over its dials. If the helper dies it is restarted on the next request.
     """
 
     name = "sdk"
 
-    def __init__(self, helper, timeout=20):
+    def __init__(self, helper, timeout=25):
         self.helper = str(helper)
         self.timeout = timeout
+        self.proc = None
+        self.lines = None
 
-    def _run(self, *args, payload=None):
+    def _start(self):
         try:
-            proc = subprocess.run([self.helper, *args], input=json.dumps(payload) if payload else None,
-                                  capture_output=True, text=True, timeout=self.timeout)
+            self.proc = subprocess.Popen([self.helper, "serve"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE, text=True, bufsize=1)
         except FileNotFoundError:
             raise RuntimeError(f"SDK helper not found at {self.helper}. Build it first (see sdk-helper/README.md).")
-        except subprocess.TimeoutExpired:
+        self.lines = queue.Queue()
+        out, err = self.proc.stdout, self.proc.stderr
+
+        def pump():  # a thread instead of select(): works on Windows pipes too
+            for line in out:
+                self.lines.put(line)
+            self.lines.put(None)
+        threading.Thread(target=pump, daemon=True).start()
+        threading.Thread(target=lambda: [log.info("helper: %s", l.rstrip()) for l in err], daemon=True).start()
+
+    def _drop(self):
+        """Forget a dead or hung helper and close its pipes; the next request starts a fresh one."""
+        if self.proc:
+            if self.proc.poll() is None:
+                self.proc.kill()
+            for pipe in (self.proc.stdin, self.proc.stdout, self.proc.stderr):
+                try:
+                    pipe.close()
+                except OSError:
+                    pass
+            self.proc.wait()
+        self.proc = None
+
+    def _ask(self, request):
+        if self.proc is None or self.proc.poll() is not None:
+            self._drop()
+            self._start()
+        try:
+            self.proc.stdin.write(json.dumps(request) + "\n")
+            self.proc.stdin.flush()
+            line = self.lines.get(timeout=self.timeout)
+        except (BrokenPipeError, OSError):
+            self._drop()
+            raise RuntimeError("SDK helper stopped unexpectedly")
+        except queue.Empty:
+            self._drop()
             raise RuntimeError("camera did not answer in time")
-        if proc.returncode != 0:
-            raise RuntimeError((proc.stderr or "SDK helper failed").strip().splitlines()[-1])
-        return json.loads(proc.stdout)
+        if line is None:
+            self._drop()
+            raise RuntimeError("SDK helper stopped unexpectedly")
+        answer = json.loads(line)
+        if "error" in answer and request["cmd"] != "status":
+            raise RuntimeError(answer["error"])
+        return answer
 
     def status(self):
         try:
-            return self._run("status")
+            return self._ask({"cmd": "status"})
         except RuntimeError as e:
             return {"connected": False, "error": str(e)}
 
     def apply(self, preset):
-        return self._run("apply", payload=preset)
+        return self._ask({"cmd": "apply", "preset": preset})
+
+    def release(self):
+        return self._ask({"cmd": "release"})
+
+    def close(self):
+        if self.proc and self.proc.poll() is None:
+            try:
+                self.proc.stdin.close()  # helper exits on end of input and disconnects cleanly
+                self.proc.wait(timeout=10)
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+        self._drop()
 
 
 def _fmt(key, v):
+    if key == "mode":
+        return {"M": "M (Manual)", "A": "A (Aperture)"}.get(v, v)
     if key == "fnumber":
         return f"f/{v:g}"
     if key == "shutter":
@@ -260,7 +322,8 @@ def make_handler(bridge):
         def do_POST(self):
             if not self._guard():
                 return
-            if urlsplit(self.path).path != "/api/apply":
+            path = urlsplit(self.path).path
+            if path not in ("/api/apply", "/api/release"):
                 return self._send(HTTPStatus.NOT_FOUND, {"error": "not found"})
             # Same-origin only. A JSON content type also forces a CORS preflight for any
             # cross-site page, which this server never approves.
@@ -275,6 +338,15 @@ def make_handler(bridge):
                 length = -1
             if not 0 < length <= MAX_BODY:
                 return self._send(HTTPStatus.BAD_REQUEST, {"error": "bad request size"})
+            if path == "/api/release":
+                self.rfile.read(length)
+                try:
+                    with bridge.lock:
+                        out = bridge.camera.release()
+                except RuntimeError as e:
+                    return self._send(HTTPStatus.BAD_GATEWAY, {"error": str(e)})
+                log.info("dials handed back to the camera")
+                return self._send(HTTPStatus.OK, out)
             try:
                 body = json.loads(self.rfile.read(length))
                 preset = validate_preset(body.get("preset"))
@@ -329,6 +401,9 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         pass
+    finally:
+        if hasattr(camera, "close"):
+            camera.close()
 
 
 if __name__ == "__main__":

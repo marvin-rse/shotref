@@ -1,2 +1,12 @@
 __pycache__/
 bridge/sdk-helper/build/
+
+# Sony Camera Remote SDK: licensed, must never be published
+CrSDK*/
+CrSDK*.zip
+RemoteCli/
+bridge/sdk-helper/CRSDK/
+*.so
+*.dylib
+*.dll
+.shotref-camera-fingerprint
